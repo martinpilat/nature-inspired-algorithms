@@ -55,7 +55,7 @@ class RandomAgent:
 
 #agent = solution.QLearningAgent(env.action_space, solution.StateDiscretizer(list(zip(env.observation_space.low, env.observation_space.high)),[15,15]), True)
 
-#agent = RandomAgent(env.action_space)
+agent = RandomAgent(env.action_space)
 
 # We will need a lot of iterations to train the agent, we can use a technique similar to the one below.
 
