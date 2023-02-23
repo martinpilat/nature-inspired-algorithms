@@ -20,7 +20,7 @@ print('action space:', env.action_space)
 
 # Before starting the simulation, we need to reset the environment, this also
 # gives us the first observation.
-obs = env.reset()
+obs, info = env.reset()
 print('initial observation:', obs)
 
 # OpenAI gym allows us to quickly get a random action using the sample() method
@@ -28,12 +28,12 @@ action = env.action_space.sample()
 
 # We can apply the action in the environment using the step(action) method. It returns
 # a new observation, the reward for this step, information about the end of the simulation
-# (two values - done, terminated) and potentially additional info as a dictionary.
-obs, r, done, terminated, info = env.step(action)
+# (two values - terminated, truncated) and potentially additional info as a dictionary.
+obs, r, terminated, truncated, info = env.step(action)
 print('next observation:', obs)
 print('reward:', r)
-print('done:', done)
 print('terminated:', terminated)
+print('truncated:', truncated)
 print('info:', info)
 
 # We can implement a simple class for a random agent -- you can use it as a base
@@ -51,16 +51,15 @@ class RandomAgent:
     def reset(self):
         pass
 
-#import solution # this class will be provided later, once you try implementing the agent yourself
+import solution # this class will be provided later, once you try implementing the agent yourself
+agent = solution.QLearningAgent(env.action_space, solution.StateDiscretizer(list(zip(env.observation_space.low, env.observation_space.high)),[15,15]), True)
 
-#agent = solution.QLearningAgent(env.action_space, solution.StateDiscretizer(list(zip(env.observation_space.low, env.observation_space.high)),[15,15]), True)
-
-agent = RandomAgent(env.action_space)
+# agent = RandomAgent(env.action_space)
 
 # We will need a lot of iterations to train the agent, we can use a technique similar to the one below.
 
 total_rewards = []
-for i in range(200): # 5000 runs in the environments
+for i in range(1000): # 5000 runs in the environments
     obs, info = env.reset()
     agent.reset()
     
@@ -81,6 +80,9 @@ for i in range(200): # 5000 runs in the environments
 
 agent.train = False
 import matplotlib.pyplot as plt
+
+plt.imshow(agent.Q.max(axis=1).reshape(15,15))
+plt.show()
 
 env = gym.make('MountainCar-v0', render_mode='human')
 
